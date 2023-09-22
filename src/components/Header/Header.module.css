@@ -1,0 +1,12 @@
+.header {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  align-items: center;
+  background-color: var(--white);
+  padding: 1.1em 20em;
+}
+
+.containerButton {
+  margin-left: auto;
+}

@@ -1,0 +1,18 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --main-font: "Raleway", sans-serif;
+  --main-color: #2a7ae4;
+  --white: #ffffff;
+  --bar-color: #f5f5f5;
+  --bar-font: #a2a2a2;
+}
+
+body {
+  font-family: var(--main-font);
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+}
