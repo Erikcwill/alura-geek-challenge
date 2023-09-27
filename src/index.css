@@ -1,8 +1,10 @@
 * {
   box-sizing: border-box;
+  margin: 0;
 }
 
 :root {
+  --mobile-max-width: 20em;
   --main-font: "Raleway", sans-serif;
   --main-color: #2a7ae4;
   --white: #ffffff;
@@ -13,6 +15,5 @@
 body {
   font-family: var(--main-font);
   font-size: 16px;
-  margin: 0;
   padding: 0;
 }

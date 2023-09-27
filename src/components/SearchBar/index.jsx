@@ -1,5 +1,4 @@
 import styles from "./SearchBar.module.css";
-import iconSearch from "./iconSearch.svg";
 
 export default function SearchBar() {
   return (
@@ -10,9 +9,9 @@ export default function SearchBar() {
         placeholder="O que deseja encontrar?"
         id="searchInput"
       ></input>
-      <button className={styles.searchButton}>
-        <img src={iconSearch} alt="Ícone de Lupa" />
-      </button>
+      <button
+        className={styles.iconButton}
+      ></button>
     </div>
   );
 }
