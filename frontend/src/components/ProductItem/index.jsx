@@ -3,7 +3,7 @@ export default function ProductItem({ product, onToggleHighlight }) {
     <li key={product.id}>
       <strong>Nome:</strong> {product.name}
       <br />
-      <strong>Preço:</strong> {product.price}
+      <strong>Preço:</strong> R${product.price}
       <br />
       <strong>Categoria:</strong> {product.category}
       <br />
