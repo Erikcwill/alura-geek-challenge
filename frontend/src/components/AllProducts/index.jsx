@@ -1,23 +1,27 @@
-import  { useEffect, useState } from "react";
-import ProductService from "../ProductService";
+import { useEffect, useState } from "react";
 import ProductItem from "../ProductItem";
+import {
+  getAllProducts,
+  toggleProductHighlight,
+  addProduct, // Adicionado
+  removeProduct, // Adicionado
+} from "../ProductService";
 
 export default function AllProducts() {
   const [products, setProducts] = useState([]);
   const [newProduct, setNewProduct] = useState({
     name: "",
-    price: "",
+    price: 0,
     category: "",
     image: "",
     description: "",
-    isHighlighted: false,
   });
 
   useEffect(() => {
     async function fetchAllProducts() {
       try {
-        const data = await ProductService.getAllProducts();
-        setProducts(data);
+        const productsData = await getAllProducts();
+        setProducts(productsData);
       } catch (error) {
         console.error("Erro ao buscar produtos:", error);
       }
@@ -26,44 +30,46 @@ export default function AllProducts() {
     fetchAllProducts();
   }, []);
 
-  const updateProductList = (updatedProduct, removedProductId) => {
-    if (removedProductId) {
+  async function handleToggleHighlight(product) {
+    try {
+      await toggleProductHighlight(product.id, !product.isHighlighted);
+      // Atualize a lista de produtos após a atualização
       setProducts((prevProducts) =>
-        prevProducts.filter((product) => product.id !== removedProductId)
-      );
-    } else if (updatedProduct) {
-      setProducts((prevProducts) =>
-        prevProducts.map((product) =>
-          product.id === updatedProduct.id ? updatedProduct : product
+        prevProducts.map((p) =>
+          p.id === product.id ? { ...p, isHighlighted: !p.isHighlighted } : p
         )
       );
+    } catch (error) {
+      console.error("Erro ao atualizar status de destaque:", error);
     }
-  };
+  }
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewProduct({
-      ...newProduct,
-      [name]: value,
-    });
-  };
-
-  const addNewProduct = async () => {
+  async function handleAddProduct() {
     try {
-      const response = await ProductService.addProduct(newProduct);
+      const response = await addProduct(newProduct);
+      setProducts((prevProducts) => [...prevProducts, response]);
       setNewProduct({
         name: "",
-        price: "",
+        price: 0,
         category: "",
         image: "",
         description: "",
-        isHighlighted: false,
       });
-      setProducts([...products, response]);
     } catch (error) {
       console.error("Erro ao adicionar produto:", error);
     }
-  };
+  }
+
+  async function handleRemoveProduct(productId) {
+    try {
+      await removeProduct(productId);
+      setProducts((prevProducts) =>
+        prevProducts.filter((product) => product.id !== productId)
+      );
+    } catch (error) {
+      console.error("Erro ao remover produto:", error);
+    }
+  }
 
   return (
     <div>
@@ -71,73 +77,69 @@ export default function AllProducts() {
       <ul>
         {products.map((product) => (
           <ProductItem
-            key={product.id}
+            key={product.id} // Defina a chave única como o ID do produto
             product={product}
-            onUpdate={updateProductList}
+            onToggleHighlight={handleToggleHighlight}
+            onRemoveProduct={() => handleRemoveProduct(product.id)}
           />
         ))}
       </ul>
-      <h2>Adicionar Novo Produto</h2>
-      <div>
-        <label>Nome:</label>
-        <input
-          type="text"
-          name="name"
-          value={newProduct.name}
-          onChange={handleInputChange}
-        />
-      </div>
-      <div>
-        <label>Preço:</label>
-        <input
-          type="number"
-          name="price"
-          value={newProduct.price}
-          onChange={handleInputChange}
-        />
-      </div>
-      <div>
-        <label>Categoria:</label>
-        <input
-          type="text"
-          name="category"
-          value={newProduct.category}
-          onChange={handleInputChange}
-        />
-      </div>
-      <div>
-        <label>Imagem:</label>
-        <input
-          type="text"
-          name="image"
-          value={newProduct.image}
-          onChange={handleInputChange}
-        />
-      </div>
-      <div>
-        <label>Descrição:</label>
-        <input
-          type="text"
-          name="description"
-          value={newProduct.description}
-          onChange={handleInputChange}
-        />
-      </div>
-      <div>
-        <label>Destacado:</label>
-        <input
-          type="checkbox"
-          name="isHighlighted"
-          checked={newProduct.isHighlighted}
-          onChange={() =>
-            setNewProduct({
-              ...newProduct,
-              isHighlighted: !newProduct.isHighlighted,
-            })
-          }
-        />
-      </div>
-      <button onClick={addNewProduct}>Adicionar Produto</button>
+      <h2>Adicionar Produto</h2>
+      <form>
+        <label>
+          Nome:
+          <input
+            type="text"
+            value={newProduct.name}
+            onChange={(e) =>
+              setNewProduct({ ...newProduct, name: e.target.value })
+            }
+          />
+        </label>
+        <label>
+          Preço:
+          <input
+            type="number"
+            value={newProduct.price}
+            onChange={(e) =>
+              setNewProduct({ ...newProduct, price: e.target.value })
+            }
+          />
+        </label>
+        <label>
+          Categoria:
+          <input
+            type="text"
+            value={newProduct.category}
+            onChange={(e) =>
+              setNewProduct({ ...newProduct, category: e.target.value })
+            }
+          />
+        </label>
+        <label>
+          Imagem:
+          <input
+            type="text"
+            value={newProduct.image}
+            onChange={(e) =>
+              setNewProduct({ ...newProduct, image: e.target.value })
+            }
+          />
+        </label>
+        <label>
+          Descrição:
+          <input
+            type="text"
+            value={newProduct.description}
+            onChange={(e) =>
+              setNewProduct({ ...newProduct, description: e.target.value })
+            }
+          />
+        </label>
+        <button type="button" onClick={handleAddProduct}>
+          Adicionar
+        </button>
+      </form>
     </div>
   );
 }

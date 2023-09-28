@@ -69,6 +69,21 @@ app.patch("/api/products/:id/highlight", (req, res) => {
   );
 });
 
+// Rota para remover um produto
+app.delete("/api/products/:id", (req, res) => {
+  const productId = req.params.id;
+
+  // Remova o produto com base no ID
+  db.run("DELETE FROM products WHERE id = ?", productId, (err) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).json({ error: "Erro ao remover o produto" });
+    } else {
+      res.json({ message: "Produto removido com sucesso" });
+    }
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
