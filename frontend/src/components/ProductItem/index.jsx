@@ -9,7 +9,7 @@ export default function ProductItem({ product, onToggleHighlight }) {
       <br />
       <strong>Descrição:</strong> {product.description}
       <br />
-      <img src={product.image} alt={product.name} />
+      <img src={product.image} width={80} alt={product.name} />
       <br />
       <strong>Destacado:</strong>{" "}
       <input

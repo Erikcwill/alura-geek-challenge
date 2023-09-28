@@ -21,20 +21,3 @@ export async function toggleProductHighlight(productId, isHighlighted) {
     throw new Error("Erro ao atualizar status de destaque");
   }
 }
-
-export async function addProduct(newProduct) {
-  try {
-    const response = await axios.post(API_URL, newProduct);
-    return response.data;
-  } catch (error) {
-    throw new Error("Erro ao adicionar produto");
-  }
-}
-
-export async function removeProduct(productId) {
-  try {
-    await axios.delete(`${API_URL}/${productId}`);
-  } catch (error) {
-    throw new Error("Erro ao remover produto");
-  }
-}
